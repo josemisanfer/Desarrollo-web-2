@@ -1,19 +1,13 @@
-import { BookService } from './BookService.js'; 
+import { BookService } from './BookService.js';
 
- 
+export default class OtherService {
+  public static getUniqueBookCategories(): string[] {
+    const books = BookService.getBooks();
 
-export default class OtherService { 
+    const categories = books.map((book) => book.category);
 
-  public static getUniqueBookCategories(): string[] { 
+    const uniqueCategories = new Set(categories);
 
-    const books = BookService.getBooks(); 
-
-    const categories = books.map((book) => book.category); 
-
-    const uniqueCategories = new Set(categories); 
-
-    return Array.from(uniqueCategories); 
-
-  } 
-
+    return Array.from(uniqueCategories);
+  }
 }

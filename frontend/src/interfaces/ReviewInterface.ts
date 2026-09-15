@@ -1,17 +1,13 @@
-export interface ReviewInterface { 
+export interface ReviewInterface {
+  id: number;
 
-  id: number; 
+  bookId: number;
 
-  bookId: number; 
+  rating: number;
 
-  rating: number; 
+  comment: string;
 
-  comment: string; 
+  author?: string;
 
-  author?: string; 
-
-  createdAt?: string; 
-
-} 
-
- 
+  createdAt?: string;
+}

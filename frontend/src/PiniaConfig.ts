@@ -1,73 +1,46 @@
-import { createPinia } from 'pinia'; 
-import { watch } from 'vue'; 
-import { bookSeeder } from '@/stores/bookseeder.js'; 
+import { createPinia } from 'pinia';
+import { watch } from 'vue';
+import { bookSeeder } from '@/stores/bookseeder.js';
 import { reviewSeeder } from '@/stores/reviewseeder.js';
- 
 
-export default class PiniaConfig { 
+export default class PiniaConfig {
+  public static init() {
+    const pinia = createPinia();
 
-  public static init() { 
+    const savedState = localStorage.getItem('piniaState');
 
-    const pinia = createPinia(); 
+    if (savedState) {
+      pinia.state.value = JSON.parse(savedState);
+    } else {
+      // initialize the state with the seeders
 
- 
+      pinia.state.value = {
+        book: {
+          books: bookSeeder,
+        },
 
-    const savedState = localStorage.getItem('piniaState'); 
+        review: {
+          reviews: reviewSeeder,
+        },
+      };
 
-    if (savedState) { 
+      // save the initial state to localStorage
 
-      pinia.state.value = JSON.parse(savedState); 
+      localStorage.setItem('piniaState', JSON.stringify(pinia.state.value));
+    }
 
-    } else { 
+    // watch for changes and save to localStorage
 
-      // initialize the state with the seeders 
+    watch(
+      pinia.state,
 
-      pinia.state.value = { 
+      (state) => {
+        localStorage.setItem('piniaState', JSON.stringify(state));
+      },
 
-        book: { 
+      { deep: true },
+    );
 
-          books: bookSeeder, 
-
-        }, 
-
-        review: { 
-
-          reviews: reviewSeeder, 
-
-        }, 
-
-      }; 
-
- 
-
-      // save the initial state to localStorage 
-
-      localStorage.setItem('piniaState', JSON.stringify(pinia.state.value)); 
-
-    } 
-
- 
-
-    // watch for changes and save to localStorage 
-
-    watch( 
-
-      pinia.state, 
-
-      (state) => { 
-
-        localStorage.setItem('piniaState', JSON.stringify(state)); 
-
-      }, 
-
-      { deep: true }, 
-
-    ); 
-
- 
-
-    return pinia; 
-
-  } 
-
+    return pinia;
+  }
 }
