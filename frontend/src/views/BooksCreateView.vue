@@ -1,53 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-
 import { BookService } from '@/services/BookService';
-
 import type { CreateBookDTO } from '@/dtos/CreateBookDTO.js';
-
 const title = ref('');
-
 const category = ref('');
-
 const price = ref(0);
-
 const stock = ref(0);
-
 const successMessage = ref('');
 
-function submitForm() {
+async function submitForm() {
   const newBook: CreateBookDTO = {
     title: title.value,
-
     category: category.value,
-
     price: price.value,
-
     stock: stock.value,
   };
-
-  BookService.createBook(newBook);
-
+ 
+ try {
+  await BookService.createBook(newBook);
   successMessage.value = 'Book created successfully!';
-
   title.value = '';
-
   category.value = '';
-
   price.value = 0;
-
   stock.value = 0;
+   } catch (error) { 
+    console.error(error); 
+  }
 }
 </script>
-
 <template>
   <section class="max-w-2xl mx-auto py-8">
     <h2 class="text-2xl font-bold text-gray-800 mb-8">Create a New Book</h2>
-
     <form class="bg-white rounded-lg shadow-md p-8 space-y-6" @submit.prevent="submitForm">
       <div>
         <label class="block text-gray-700 font-semibold mb-2" for="title">Title</label>
-
         <input
           v-model="title"
           type="text"
